@@ -1,5 +1,7 @@
 <?php
 
+namespace Ghedipunk\PhpWebsocket;
+
 class WebSocketUser {
 
   public $socket;
@@ -12,7 +14,7 @@ class WebSocketUser {
 
   public $sendingContinuous = false;
   public $partialMessage = "";
-  
+
   public $hasSentClose = false;
 
   function __construct($id, $socket) {

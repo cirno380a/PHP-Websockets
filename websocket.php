@@ -1,9 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-require_once('./websockets.php');
+require_once 'config.php';
 
-class TestWS extends WebSocketServer {
+require_once 'daemonize.php';
+
+use Ghedipunk\PhpWebsocket\WebSocketServer;
+
+class WebSocket extends WebSocketServer {
   //protected $maxBufferSize = 1048576; //1MB... overkill for an echo server, but potentially plausible for other applications.
 
   protected function process ($user, $message) {
@@ -23,11 +27,11 @@ class TestWS extends WebSocketServer {
   }
 }
 
-$test = new TestWS("0.0.0.0","19810");
+$socket = new Websocket(SOCKET_SERVER, SOCKET_PORT);
 
 try {
-  $test->run();
+  $socket->run();
 }
 catch (Exception $e) {
-  $test->stderr($e->getMessage());
+  $socket->stderr($e->getMessage());
 }

@@ -1,13 +1,14 @@
 <?php
 
-//require_once('./daemonize.php');
-require_once('./users.php');
+namespace Ghedipunk\PhpWebsocket;
+
+use Ghedipunk\PhpWebsocket\WebSocketUser;
 
 abstract class WebSocketServer {
 
   protected $logFile;
 
-  protected $userClass = 'WebSocketUser'; // redefine this if you want a custom user class.  The custom user class should inherit from WebSocketUser.
+  //protected $userClass = 'WebSocketUser'; // redefine this if you want a custom user class.  The custom user class should inherit from WebSocketUser.
   protected $maxBufferSize;
   protected $master;
   protected $sockets                              = array();
@@ -19,7 +20,7 @@ abstract class WebSocketServer {
   protected $headerSecWebSocketExtensionsRequired = false;
 
   function __construct($addr, $port, $bufferLength = 2048) {
-    $this->logFile = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'sockets-' . date('Ymd') . '.log';
+    $this->logFile = LOG_PATH . DIRECTORY_SEPARATOR . 'socket-' . date('Ymd') . '.log';
     $this->maxBufferSize = $bufferLength;
     $this->master = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)  or die("Failed: socket_create()");
     socket_set_option($this->master, SOL_SOCKET, SO_REUSEADDR, 1) or die("Failed: socket_option()");
@@ -152,7 +153,8 @@ abstract class WebSocketServer {
   }
 
   protected function connect($socket) {
-    $user = new $this->userClass(uniqid('u'), $socket);
+    //$user = new $this->userClass(uniqid('u'), $socket);
+    $user = new WebSocketUser(uniqid('u'), $socket);
     $this->users[$user->id] = $user;
     $this->sockets[$user->id] = $socket;
     $this->connecting($user);
