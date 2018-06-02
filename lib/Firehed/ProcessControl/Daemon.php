@@ -238,7 +238,11 @@ class Daemon {
 	*/
 
 	private function stop($exit = true) {
-		$this->kill();
+		$this->terminate('Stopping...', SIGKILL);
+		if (file_exists($this->pidfile)) {
+			unlink($this->pidfile);
+		}
+		$exit && exit;
 	}
 
 	private function restart() {
